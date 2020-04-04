@@ -5,6 +5,10 @@
  to mute your computer and after five minutes it will resend an other command to unmute it\
  than after a minute it will recheck if there is a prayer
  
+# Requirements:
+ requests library
+>pip install requests
+ 
 # Do whatever you want with this , i don't care
  
 The the scripts for the fake press commands are from:
