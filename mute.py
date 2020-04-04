@@ -3,15 +3,15 @@ import requests
 import sched
 import time
 import datetime
-
+import sys
 # current time variables
 today = datetime.date.today
 
 
 # get prayers times from online api
 def apiRequest():
-    # API params
-    URL = 'http://api.aladhan.com/v1/timingsByCity'
+    # Times API call and params
+    URL = 'http://api.aladhan.com/v1/timingsByCity/'
     PARAMS = {'city': 'cairo', 'country': 'egypt', 'method': 5}
     r = requests.get(url=URL, params=PARAMS)
     return r.json()
