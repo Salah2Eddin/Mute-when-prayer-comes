@@ -66,6 +66,11 @@ def getPrayersTimes(data):
     return prayersTimes
 
 
+try:
+    apiRequest()
+except requests.exceptions.ConnectionError:
+    print('No internet connection , Reconnect than run the scirpt')
+    sys.exit()
 data = apiRequest()
 
 
@@ -93,10 +98,5 @@ Running\n
 This script will mute your computer while there is a prayer\n
 It will check for time every minute and will mute your computer for 5 minutes\n
 To quit use ctrl+c""")
-try:
-    apiRequest()
-except requests.exceptions.ConnectionError:
-    print('No internet connection , Reconnect than run the scirpt')
-    sys.exit()
 while True:
     schedualer.run()

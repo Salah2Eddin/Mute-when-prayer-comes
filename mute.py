@@ -46,10 +46,12 @@ def getPrayersTimes(data):
 
 
 try:
-    data = apiRequest()
+    apiRequest()
 except requests.exceptions.ConnectionError:
     print('No internet connection , Reconnect than run the scirpt')
     sys.exit()
+
+data = apiRequest()
 
 
 def checkForTime():
