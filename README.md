@@ -6,9 +6,10 @@
  than after a minute it will recheck if there is a prayer
  
 # Requirements:
- requests library
+1-requests library
 >pip install requests
- 
+2-ipinfo library-if you will use the auto location script
+>pip install ipinfo
 # Do whatever you want with this , i don't care
  
 The the scripts for the fake press commands are from:
