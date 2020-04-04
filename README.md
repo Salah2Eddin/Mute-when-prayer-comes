@@ -12,4 +12,4 @@
 # Do whatever you want with this , i don't care
  
 The the scripts for the fake press commands are from:
- https://github.com/Paradoxis/Windows-Sound-Manager
+>https://github.com/Paradoxis/Windows-Sound-Manager
