@@ -6,6 +6,6 @@
  than after a minute it will recheck
  
  
-# The the scripts for the fake press commands can be found at
+# The the scripts for the fake press commands are from:
  https://github.com/Paradoxis/Windows-Sound-Manager
 (I dont know a lot about git commands so i just put a link)
