@@ -67,8 +67,6 @@ def getPrayersTimes(data):
 
 
 data = apiRequest()
-print(data)
-
 
 def checkForTime():
     global today, data
