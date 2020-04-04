@@ -47,7 +47,10 @@ def muteAndUnmute(delay):
 
 def getTime():
     # replaced secs and microsecs to make it a bit more precise
-    return datetime.datetime.now().time().replace(second=0, microsecond=0)
+    time12h = datetime.datetime.now().time()
+    time12h = time12h.replace(second=0, microsecond=0).strftime('%I:%M')
+    time12h = datetime.datetime.strptime(time12h, '%I:%M').time()
+    return time12h
 
 
 def getPrayersTimes(data):
