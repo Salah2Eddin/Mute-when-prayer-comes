@@ -30,12 +30,12 @@ def getTime():
     return datetime.datetime.now().time().replace(second=0, microsecond=0)
 
 
-def getPrayersTimes():
+def getPrayersTimes(data):
     # Get the time strings
     prayersTimesMap = data['data']['timings']
     prayersTimes = []
 
-    # Turn the strins into Time Objects !!
+    # Turn the strings into Time Objects !!
     for prayer in prayersTimesMap:
         prayerTimeString = prayersTimesMap[prayer]
         prayerTimeStringList = prayerTimeString.split(':')
@@ -50,7 +50,7 @@ data = apiRequest()
 
 def checkForTime():
     global today, data
-    prayersTimes = getPrayersTimes()
+    prayersTimes = getPrayersTimes(data)
     now = getTime()
     # if there is a prayer now
     if now in prayersTimes:
