@@ -59,8 +59,8 @@ def getPrayersTimes(data):
     for prayer in prayersTimesMap:
         prayerTime24H = datetime.datetime.strptime(prayersTimesMap[prayer],
                                                    '%H:%M')
-        prayerTimeStr = prayerTime24Form.strftime('%I:%M')
-        prayerTime = datetime.datetime.strptime(prayerTime12FormStr, '%I:%M')
+        prayerTimeStr = prayerTime24H.strftime('%I:%M')
+        prayerTime = datetime.datetime.strptime(prayerTimeStr, '%I:%M')
         prayersTimes.append(prayerTime.time())
     return prayersTimes
 
