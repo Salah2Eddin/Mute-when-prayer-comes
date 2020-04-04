@@ -5,6 +5,7 @@
  to mute your computer and after five minutes it will resend an other command to unmute it\
  than after a minute it will recheck if there is a prayer
  
+# Do whatever you want with this , i don't care
  
-# The the scripts for the fake press commands are from:
+The the scripts for the fake press commands are from:
  https://github.com/Paradoxis/Windows-Sound-Manager
