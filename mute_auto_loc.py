@@ -95,6 +95,5 @@ It will check for time every minute and will mute your computer for 5 minutes\n
 To quit use ctrl+c""")
 
 while True:
-    print('checking')
     checkForTime()
     time.sleep(30)
