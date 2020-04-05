@@ -81,8 +81,8 @@ def checkForTime():
         muteAndUnmute(300)
         print('unmute')
     # if todayVariable is not today (Day ended and we are in next day)
-    elif today != datetime.date.today:
-        today = datetime.date.today  # Make it next day
+    elif today != datetime.date.today():
+        today = datetime.date.today()  # Make it next day
         # Also get the new prayers time
         data = apiRequest()
         prayersTimes = getPrayersTimes(data)
