@@ -1,6 +1,5 @@
 from sound import Sound
 import requests
-import sched
 import time
 import datetime
 import sys
@@ -11,7 +10,7 @@ today = datetime.date.today
 # get prayers times from online api
 def apiRequest():
     # Times API call and params
-    URL = 'http://api.aladhan.com/v1/timingsByCity/'
+    URL = 'http://api.aladhan.com/v1/timingsByCity'
     PARAMS = {'city': 'cairo', 'country': 'egypt', 'method': 5}
     r = requests.get(url=URL, params=PARAMS)
     return r.json()
@@ -37,11 +36,11 @@ def getPrayersTimes(data):
 
     # Turn the strings into Time Objects !!
     for prayer in prayersTimesMap:
-        prayerTimeString = prayersTimesMap[prayer]
-        prayerTimeStringList = prayerTimeString.split(':')
-        prayerTimeList = [int(i) for i in prayerTimeStringList]
-        prayerTime = datetime.time(prayerTimeList[0], prayerTimeList[1])
-        prayersTimes.append(prayerTime)
+        prayerTime24H = datetime.datetime.strptime(prayersTimesMap[prayer],
+                                                   '%H:%M')
+        prayerTimeStr = prayerTime24Form.strftime('%I:%M')
+        prayerTime = datetime.datetime.strptime(prayerTime12FormStr, '%I:%M')
+        prayersTimes.append(prayerTime.time())
     return prayersTimes
 
 
@@ -51,12 +50,13 @@ except requests.exceptions.ConnectionError:
     print('No internet connection , Reconnect than run the scirpt')
     sys.exit()
 
+
 data = apiRequest()
+prayersTimes = getPrayersTimes(data)
 
 
 def checkForTime():
-    global today, data
-    prayersTimes = getPrayersTimes(data)
+    global today, data, prayersTimes
     now = getTime()
     # if there is a prayer now
     if now in prayersTimes:
@@ -66,11 +66,11 @@ def checkForTime():
     # if todayVariable is not today (Day ended and we are in next day)
     elif today != datetime.date.today:
         today = datetime.date.today  # Make it next day
-        data = apiRequest()  # Also get the new prayers time
+        # Also get the new prayers time
+        data = apiRequest()
+        prayersTimes = getPrayersTimes(data)
 
 
-schedualer = sched.scheduler(time.time, time.sleep)
-schedualer.enter(60, 1, checkForTime)
 print("""
 Running\n
 This script will mute your computer while there is a prayer\n
@@ -78,4 +78,5 @@ It will check for time every minute and will mute your computer for 5 minutes\n
 To quit use ctrl+c""")
 
 while True:
-    schedualer.run()
+    checkForTime()
+    time.sleep(30)

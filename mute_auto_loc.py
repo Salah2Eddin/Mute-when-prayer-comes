@@ -1,6 +1,5 @@
 from sound import Sound
 import requests
-import sched
 import time
 import datetime
 import ipinfo
@@ -58,29 +57,22 @@ def getPrayersTimes(data):
 
     # Turn the strings into Time Objects !!
     for prayer in prayersTimesMap:
-        prayerTimeString = prayersTimesMap[prayer]
-        prayerTimeStringList = prayerTimeString.split(':')
-        prayerTimeList = [int(i) for i in prayerTimeStringList]
-        prayerTime = datetime.time(prayerTimeList[0], prayerTimeList[1])
-        prayersTimes.append(prayerTime)
+        prayerTime24H = datetime.datetime.strptime(prayersTimesMap[prayer],
+                                                   '%H:%M')
+        prayerTimeStr = prayerTime24Form.strftime('%I:%M')
+        prayerTime = datetime.datetime.strptime(prayerTime12FormStr, '%I:%M')
+        prayersTimes.append(prayerTime.time())
     return prayersTimes
 
 
-try:
-    apiRequest()
-except requests.exceptions.ConnectionError:
-    print('No internet connection , Reconnect than run the scirpt')
-    sys.exit()
 data = apiRequest()
+prayersTimes = getPrayersTimes(data)
 
 
 def checkForTime():
-    global today, data
-    print('checking')
-    prayersTimes = getPrayersTimes(data)
+    global today, data, prayersTimes
     now = getTime()
     # if there is a prayer now
-    print(prayersTimes)
     if now in prayersTimes:
         print('mute')
         muteAndUnmute(300)
@@ -88,15 +80,18 @@ def checkForTime():
     # if todayVariable is not today (Day ended and we are in next day)
     elif today != datetime.date.today:
         today = datetime.date.today  # Make it next day
-        data = apiRequest()  # Also get the new prayers time
+        # Also get the new prayers time
+        data = apiRequest()
+        prayersTimes = getPrayersTimes(data)
 
 
-schedualer = sched.scheduler(time.time, time.sleep)
-schedualer.enter(60, 1, checkForTime)
 print("""
 Running\n
 This script will mute your computer while there is a prayer\n
 It will check for time every minute and will mute your computer for 5 minutes\n
 To quit use ctrl+c""")
+
 while True:
-    schedualer.run()
+    print('checking')
+    checkForTime()
+    time.sleep(30)
