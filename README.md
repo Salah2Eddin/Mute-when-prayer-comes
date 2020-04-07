@@ -10,7 +10,7 @@ Also my api token for ipinfo is hardcoded .. feel free to use it\
 but it would be better to just get yours from their site if you will use\
 this for something else\
 it's free\
-> # ipinfo.io
+>ipinfo.io
 
 # Requirements:
 1-requests library - to send POST and GET requests to APIs
