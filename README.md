@@ -21,7 +21,7 @@
 # Note 
 My api token for ipinfo is hardcoded .. so dont use it for something else.\
 Just get yours from their site - it's free
->ipinfo.io
+>https://ipinfo.io
 
 # License
 >Do whatever you want with this script, i don't care
