@@ -14,7 +14,7 @@
 2-ipinfo library - if you will use the auto location script
 >pip install ipinfo
 
-3-pycaw library - controls sound (and ton of other things)
+3-pycaw library - controls sound
 >pip install pycaw
 
 
