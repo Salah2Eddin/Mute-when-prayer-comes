@@ -27,8 +27,8 @@ def muteAndUnmute(delay):
 def getTime():
     # replaced secs and microsecs to make it a bit more precise
     time12h = datetime.datetime.now().time()
-    time12h = time12h.replace(second=0, microsecond=0).strftime('%I:%M')
-    time12h = datetime.datetime.strptime(time12h, '%I:%M').time()
+    time12h = time12h.replace(second=0, microsecond=0).strftime('%I:%M %p')
+    time12h = datetime.datetime.strptime(time12h, '%I:%M %p').time()
     return time12h
 
 
@@ -41,8 +41,8 @@ def getPrayersTimes(data):
     for prayer in prayersTimesMap:
         prayerTime24H = datetime.datetime.strptime(prayersTimesMap[prayer],
                                                    '%H:%M')
-        prayerTimeStr = prayerTime24H.strftime('%I:%M')
-        prayerTime = datetime.datetime.strptime(prayerTimeStr, '%I:%M')
+        prayerTimeStr = prayerTime24H.strftime('%I:%M %p')
+        prayerTime = datetime.datetime.strptime(prayerTimeStr, '%I:%M %p')
         prayersTimes.append(prayerTime.time())
     return prayersTimes
 
