@@ -1,4 +1,4 @@
-from sound import Sound
+from soundControls import mute, unmute
 import requests
 import time
 import datetime
@@ -40,9 +40,9 @@ def apiRequest():
 def muteAndUnmute(delay):
     # using a fake keypress on your keyboard mute button
     # we will mute and unmute your volume
-    Sound.mute()
+    mute()
     time.sleep(delay)
-    Sound.mute()
+    unmute()
 
 
 def getTime():
