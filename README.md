@@ -18,13 +18,14 @@
 >pip install pycaw
 
 
-# License 
+# Note 
 My api token for ipinfo is hardcoded .. so dont use it for something else.\
 Just get yours from their site - it's free\
->ipinfo.io\
-Also\
+>ipinfo.io
+
+# License
 >Do whatever you want with this script, i don't care
 
 # Not using this anymore but just in case anybody needs this
-The the scripts for the fake keyboard press:
+The the scripts for the fake keyboard press - not using anymore:
 >https://github.com/Paradoxis/Windows-Sound-Manager
