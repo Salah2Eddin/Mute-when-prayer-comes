@@ -23,6 +23,9 @@ My api token for ipinfo is hardcoded .. so dont use it for something else.\
 Just get yours from their site - it's free
 >https://ipinfo.io
 
+Also mute.py is hardcoded to my home city , i dont recommend using it without
+changing it
+
 # License
 >Do whatever you want with this script, i don't care
 
