@@ -3,14 +3,13 @@ import requests
 import time
 import datetime
 import sys
-# current day variables
+# current time variables
 today = datetime.date.today
 
 
 # get prayers times from online api
 def apiRequest():
     # Times API call and params
-    # To get prayer times
     URL = 'http://api.aladhan.com/v1/timingsByCity'
     PARAMS = {'city': 'cairo', 'country': 'egypt', 'method': 5}
     r = requests.get(url=URL, params=PARAMS)
@@ -18,14 +17,15 @@ def apiRequest():
 
 
 def muteAndUnmute(delay):
-    # Mute and after delay unmute
+    # using a fake keypress on your keyboard mute button
+    # we will mute and unmute your volume
     mute()
     time.sleep(delay)
     unmute()
 
 
 def getTime():
-    # replaced secs and microsecs with 0
+    # replaced secs and microsecs to make it a bit more precise
     time12h = datetime.datetime.now().time()
     time12h = time12h.replace(second=0, microsecond=0).strftime('%I:%M %p')
     time12h = datetime.datetime.strptime(time12h, '%I:%M %p').time()
@@ -37,7 +37,7 @@ def getPrayersTimes(data):
     prayersTimesMap = data['data']['timings']
     prayersTimes = []
 
-    # Turn the strings into DateTime objects
+    # Turn the strings into Time Objects !!
     for prayer in prayersTimesMap:
         prayerTime24H = datetime.datetime.strptime(prayersTimesMap[prayer],
                                                    '%H:%M')
@@ -47,14 +47,14 @@ def getPrayersTimes(data):
     return prayersTimes
 
 
-# check for internet
-# by sending a request to our api
 try:
-    data = apiRequest()
+    apiRequest()
 except requests.exceptions.ConnectionError:
     print('No internet connection , Reconnect than run the scirpt')
     sys.exit()
 
+
+data = apiRequest()
 prayersTimes = getPrayersTimes(data)
 
 
