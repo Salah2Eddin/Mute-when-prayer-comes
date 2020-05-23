@@ -69,6 +69,7 @@ def getPrayersTimes(data):
         prayerTimeStr = prayerTime24H.strftime('%I:%M %p')
         prayerTime = datetime.datetime.strptime(prayerTimeStr, '%I:%M %p')
         prayersTimes.append(prayerTime.time())
+    print(prayersTimes)
     return prayersTimes
 
 
@@ -107,4 +108,4 @@ To quit use ctrl+c""")
 
 while True:
     checkForTime()
-    time.sleep(30)
+    time.sleep(5)
