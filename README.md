@@ -11,7 +11,7 @@
 1-requests library - to send POST and GET requests to APIs
 >pip install requests
 
-2-ipinfo library - if you will use the auto location script
+2-ipinfo library - to get your location using your ip ( I WILL FIND YOU, THAN HUG YOU )
 >pip install ipinfo
 
 3-pycaw library - controls sound
@@ -22,9 +22,6 @@
 My api token for ipinfo is hardcoded .. so dont use it for something else.\
 Just get yours from their site - it's free
 >https://ipinfo.io
-
-Also mute.py is hardcoded to my home city , i dont recommend using it without
-changing it
 
 # License
 >Do whatever you want with this script, i don't care
