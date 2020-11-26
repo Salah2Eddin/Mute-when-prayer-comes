@@ -2,3 +2,4 @@
 __pycache__/sound.cpython-38.pyc
 __pycache__/keyboard.cpython-38.pyc
 *.pyc
+pp.py
