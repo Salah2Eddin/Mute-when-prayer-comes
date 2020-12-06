@@ -1,6 +1,7 @@
 from soundControls import mute_unmute
+from time import sleep
 import requests
-import time
+import urllib3
 import datetime
 import ipinfo
 import socket
@@ -53,3 +54,24 @@ def prayersAPI_request(locData):
               'method': 5}
     r = requests.get(url=URL, params=PARAMS)
     return r.json()
+
+
+def send_request():
+    for i in range(0, 3):
+        try:
+            loc_data = get_loc()
+            return prayersAPI_request(loc_data)
+        except (requests.exceptions.ConnectionError or
+                requests.exceptions.ReadTimeout or
+                urllib3.exceptions.ReadTimeoutError):
+            if i == 2:
+                print('Failed to connect to the api after 3 tries..')
+                print('Check your internet connection')
+                sys.exit()
+            else:
+                print('Failed to connect to the api.. try:{}'.format(i+1))
+                sleep(1)
+                for i in range(0, 3):
+                    print('Trying to reconnect in {}..'.format(3-i))
+                    sleep(1)
+                    continue
