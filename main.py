@@ -1,38 +1,66 @@
 from soundControls import mute_unmute
-from get_times import get_prayer_times
-from api_requests import prayersAPI_request, get_loc
+from times_processing import get_prayer_times
+from api_requests import send_request
 from check import check_prayer_now, check_date
+from widgets.TimeLabel import TimeLabel
+from widgets.LabelsTable import LabelsTable
 from time import sleep
-import requests
+import tkinter as tk
 import datetime
-import urllib3
-
-# current time variables
-today = datetime.datetime.now().date()
+today = None
+prayer_times = {}
 
 
-def send_request():
-    try:
-        loc_data = get_loc()
-        return prayersAPI_request(loc_data)
-    except (requests.exceptions.ConnectionError or
-            urllib3.exceptions.ReadTimeoutError):
-        print('No internet connection , Reconnect than run the scirpt')
-        sys.exit()
+class App(tk.Tk):
+    def __init__(self):
+        tk.Tk.__init__(self)
+        self.title("Mute when prayer comes")
+        self.resizable(0, 0)
 
+        self.date = tk.Label(self,
+                             text='Date: {}'.format(''))
+        self.date.grid(column=0, row=0, sticky=tk.W)
 
-if __name__ == "__main__":
-    request = send_request()
-    prayer_times = get_prayer_times(request['data']['timings'])
-    print(f'Date: {today}')
-    print(prayer_times)
-    while True:
+        self.time = TimeLabel(self)
+        self.time.grid(column=1, row=0, sticky=tk.E, padx=4)
+
+        self.table = LabelsTable(self)
+        self.table.grid(column=0, row=1, columnspan=2, padx=4)
+
+        self.btn = tk.Button(self, command=self.reload, text='Reload times')
+        self.btn.grid(column=0, row=2, sticky=tk.NE, columnspan=2, padx=4,
+                      pady=2)
+
+    def check(self):
+        global today, prayer_times
         if check_prayer_now(prayer_times):
             mute_unmute(300)
         if not check_date(today):
             today = datetime.datetime.now().date()
-            request = send_request()
-            prayer_times = get_prayer_times(request['data']['timings'])
-            print(f'Date: {today}')
-            print(prayer_times)
-        sleep(15)
+            self.reload()
+            self.after(15*1000, self.check)
+
+    def reload(self):
+        global prayer_times
+        self.table.set_dict({'Fetching Times': 'Fetching Times'})
+        request = send_request()
+        if request:
+            timings = request['data']['timings']
+            prayer_times = get_prayer_times(timings)
+            self.date.configure(text='Date: {}'.format(today))
+            self.table.set_dict(prayer_times)
+        elif request is None:
+            if prayer_times is not {}:
+                err_msg = "Failed to fetch times.. please reload"
+                self.table.set_dict({err_msg: err_msg})
+            else:
+                tk.messagebox.showinfo(
+                    title="Error", message=err_msg)
+
+
+if __name__ == '__main__':
+    window = App()
+    window.reload()
+    print('Started main loop')
+    window.after(1000, window.check)
+    window.mainloop()
