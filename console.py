@@ -1,6 +1,6 @@
 from soundControls import mute_unmute
-from get_times import get_prayer_times
-from api_requests import send_request
+from times_processing import get_prayer_times
+from api_requests import send_request_console
 from check import check_prayer_now, check_date
 from time import sleep
 import datetime
@@ -14,7 +14,7 @@ def main():
             mute_unmute(300)
         if not check_date(today):
             today = datetime.datetime.now().date()
-            request = send_request()
+            request = send_request_console()
             prayer_times = get_prayer_times(request['data']['timings'])
 
             # Printing Date and Prayer times for the user

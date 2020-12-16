@@ -5,6 +5,10 @@ from time import sleep
 def unmute():
     """
     Detect every audio output session and unmute it!
+    params:
+        none
+    return:
+        none
     """
     sessions = AudioUtilities.GetAllSessions()
     for session in sessions:
@@ -14,7 +18,11 @@ def unmute():
 
 def mute():
     """
-    Detect every audio output session and mute it!
+    Detect every audio output session and mute it!\n
+    params:
+        none
+    return
+        none
     """
     sessions = AudioUtilities.GetAllSessions()
     for session in sessions:
@@ -22,15 +30,24 @@ def mute():
         interface.SetMute(1, None)
 
 
-def mute_unmute(delay):
+def mute_unmute(delay, allow_unmute=False):
     """
-    delay -> int: delay between mute and unmute\n
-    Detect every audio output session, mute it and after (delay) unmute it
-    Note: The while loop is to make sure you didn't unmute manually!
+    Detect every audio output session, mute it and after (delay) unmute it\n
+    params:
+        delay (int): delay between mute and unmute
+        allow_unmute (bool): Default=False
+            True: User can unmute manually
+            False: User can't unmute manually
+    return:
+        none
     """
-    i = 0
-    while i < delay:
+    if allow_unmute:
         mute()
-        sleep(1)
-        i += 1
+        sleep(delay)
+    elif not allow_unmute:
+        i = 0
+        while i < delay:
+            mute()
+            sleep(1)
+            i += 1
     unmute()

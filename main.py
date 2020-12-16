@@ -1,7 +1,9 @@
 from soundControls import mute_unmute
-from get_times import get_prayer_times
+from times_processing import get_prayer_times
 from api_requests import send_request
 from check import check_prayer_now, check_date
+from widgets.TimeLabel import TimeLabel
+from widgets.LabelsTable import LabelsTable
 from time import sleep
 import tkinter as tk
 import datetime
@@ -9,79 +11,56 @@ today = None
 prayer_times = {}
 
 
-class PrayersTable(tk.Frame):
-    def __init__(self, parent, prayers_dict):
-        tk.Frame.__init__(self, parent)
-        self.prayers_dict = prayers_dict
-        self.labels = [
-            (tk.Label(self, text=i), tk.Label(self, text=j))
-            for i, j in prayers_dict.items()]
-        for i in range(len(self.labels)):
-            label = self.labels[i][0]
-            label.grid(column=i, row=0)
-            label = self.labels[i][1]
-            label.grid(column=i, row=1)
+class App(tk.Tk):
+    def __init__(self):
+        tk.Tk.__init__(self)
+        self.title("Mute when prayer comes")
+        self.resizable(0, 0)
 
-    def set_dict(self, new_dict):
-        self.prayers_dict = new_dict
-        self.labels = [
-            (tk.Label(self, text=i), tk.Label(self, text=j))
-            for i, j in new_dict.items()]
-        for i in range(len(self.labels)):
-            label = self.labels[i][0]
-            label.grid(column=i, row=0)
-            label = self.labels[i][1]
-            label.grid(column=i, row=1)
+        self.date = tk.Label(self,
+                             text='Date: {}'.format(''))
+        self.date.grid(column=0, row=0, sticky=tk.W)
 
+        self.time = TimeLabel(self)
+        self.time.grid(column=1, row=0, sticky=tk.E, padx=4)
 
-class TimeLabel(tk.Frame):
-    def __init__(self, parent):
-        tk.Frame.__init__(self, parent)
-        self.time = datetime.datetime.now().time()
-        self.time_str = self.time.strftime('%I:%M:%S %p')
-        self.time_label = tk.Label(self, text=self.time_str)
-        self.time_label.grid(column=0, row=0)
-        self.after(s2ms(1), self.set_time)
+        self.table = LabelsTable(self)
+        self.table.grid(column=0, row=1, columnspan=2, padx=4)
 
-    def set_time(self):
-        self.time = datetime.datetime.now().time()
-        self.time_str = self.time.strftime('%I:%M:%S %p')
-        self.time_label.configure(text=self.time_str)
-        self.time_label.grid(column=0, row=0)
-        self.after(s2ms(1), self.set_time)
+        self.btn = tk.Button(self, command=self.reload, text='Reload times')
+        self.btn.grid(column=0, row=2, sticky=tk.NE, columnspan=2, padx=4,
+                      pady=2)
 
+    def check(self):
+        global today, prayer_times
+        if check_prayer_now(prayer_times):
+            mute_unmute(300)
+        if not check_date(today):
+            today = datetime.datetime.now().date()
+            self.reload()
+            self.after(15*1000, self.check)
 
-def s2ms(sec):
-    """
-    Turns Seconds into MicroSeconds
-    """
-    return sec*1000
-
-
-def check():
-    global today, prayer_times
-    if check_prayer_now(prayer_times):
-        mute_unmute(300)
-    if not check_date(today):
-        today = datetime.datetime.now().date()
+    def reload(self):
+        global prayer_times
+        self.table.set_dict({'Fetching Times': 'Fetching Times'})
         request = send_request()
-        prayer_times = get_prayer_times(request['data']['timings'])
-        date.configure(text='Date: {}'.format(datetime.datetime.now().date()))
-        table.set_dict(prayer_times)
-        window.after(s2ms(15), check)
+        if request:
+            timings = request['data']['timings']
+            prayer_times = get_prayer_times(timings)
+            self.date.configure(text='Date: {}'.format(today))
+            self.table.set_dict(prayer_times)
+        elif request is None:
+            if prayer_times is not {}:
+                err_msg = "Failed to fetch times.. please reload"
+                self.table.set_dict({err_msg: err_msg})
+            else:
+                tk.messagebox.showinfo(
+                    title="Error", message=err_msg)
 
-
-window = tk.Tk()
-window.title("Mute when prayer comes")
-window.geometry('360x400')
-date = tk.Label(window, text='Date: {}'.format(''))
-date.grid(column=0, row=0)
-time = TimeLabel(window)
-time.grid(column=1, row=0)
-table = PrayersTable(window, {})
-table.grid(column=0, row=1)
 
 if __name__ == '__main__':
+    window = App()
+    window.reload()
     print('Started main loop')
-    window.after(1, check)
+    window.after(1000, window.check)
     window.mainloop()
